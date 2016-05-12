@@ -20,17 +20,6 @@ function capture (name) {
     casper.capture(screenshots + (++iterator) + '_' + name + '.png');
 }
 
-function failureReport(failure){
-    //if error type undefined function
-    if(failure.message.message){//or failure.message.stack.TypeError
-        failure.message.message = "Message : " + failure.message.message + "\nLine : "+ failure.message.line;//in jenkins -> title
-    }
-    //else assert error
-    else{failure.message = "Message : " + failure.message + "\nLine : "+ failure.line + "\nCode : " + failure.lineContents;}
-
-    //console.log(JSON.stringify(failure,4,'\t')); //see parameters you can modify in the failure object
-}
-
 casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
 
     
@@ -49,7 +38,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         null,
         function onTimeout () {
             capture('wuber_error');
-            this.echo('Reached loading timeout game.php. Exiting...').exit();
+            test.fail('Reached loading timeout game.php. Exiting...');
         },
         loadTime
     );
@@ -60,7 +49,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         null,
         function onTimeout () {
             capture('game_error');
-            this.echo('Reached loading timeout mapContainer. Exiting...').exit();
+            test.fail('Reached loading timeout mapContainer. Exiting...').exit();
         },
         loadTime
     );
@@ -117,7 +106,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         this.wait(waitTime, function () {
             'use strict';
             capture('chat');
-            test.assertTextExists('Hello1 from Casper (' + timestamp + ')!', 'Chat is working').on("fail",failureReport);;
+            test.assertTextExists('Hello from Casper (' + timestamp + ')!', 'Chat is working');
         });
 
     });
