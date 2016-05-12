@@ -89,6 +89,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         this.wait(waitTime, function () {
             capture('diplomacy');
             test.assertVisible('#diplomacyContainer', 'Diplomacy is visible ');
+            test.fail("Here goes a really long and expressive message", {name:'shortfacts'});
             this.click('#diplomacyContainer .func_close_button');
         });
     });
@@ -106,7 +107,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         this.wait(waitTime, function () {
             'use strict';
             capture('chat');
-            test.assertTextExists('Hello from Casper (' + timestamp + ')!', 'Chat is working');
+            test.assertTextExists('Hello1 from Casper (' + timestamp + ')!', 'Chat is working');
         });
 
     });
