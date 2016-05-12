@@ -20,6 +20,17 @@ function capture (name) {
     casper.capture(screenshots + (++iterator) + '_' + name + '.png');
 }
 
+function failureReport(failure){
+    //if error type undefined function
+    if(failure.message.message){//or failure.message.stack.TypeError
+        failure.message.message = "Message : " + failure.message.message + "\nLine : "+ failure.message.line;//in jenkins -> title
+    }
+    //else assert error
+    else{failure.message = "Message : " + failure.message + "\nLine : "+ failure.line + "\nCode : " + failure.lineContents;}
+
+    //console.log(JSON.stringify(failure,4,'\t')); //see parameters you can modify in the failure object
+}
+
 casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
 
     
@@ -88,8 +99,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         this.click('#func_btn_diplomacy');
         this.wait(waitTime, function () {
             capture('diplomacy');
-            test.assertVisible('#diplomacyContainer', 'Diplomacy is visible ');
-            test.fail("Here goes a really long and expressive message", {name:'shortfacts'});
+            test.assertVisible('#diplomacyContainer', 'Diplomacy is visible ')
             this.click('#diplomacyContainer .func_close_button');
         });
     });
@@ -107,7 +117,7 @@ casper.test.begin('WW2 - Smoke test', numTests, function suite (test) {
         this.wait(waitTime, function () {
             'use strict';
             capture('chat');
-            test.assertTextExists('Hello1 from Casper (' + timestamp + ')!', 'Chat is working');
+            test.assertTextExists('Hello1 from Casper (' + timestamp + ')!', 'Chat is working').on("fail",failureReport);;
         });
 
     });
